@@ -10,3 +10,7 @@ dpkg -s npm &>/dev/null || {
 command -v hubot &>/dev/null || {
   npm install -g hubot coffee-script
 }
+
+dpkg -s libicu-dev &>/dev/null || {
+  apt-get -y install libexpat1-dev libicu-dev
+}
