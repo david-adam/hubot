@@ -6,7 +6,9 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.provision "shell", path: "provision.sh"
+  def provisioning(config, shell_arguments)
+    config.vm.provision "shell", path: "provision.sh", args: shell_arguments
+  end
 
   excludes = [".git/", "myhubot/node_modules"]
   config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: excludes, rsync_excludes: excludes
@@ -16,10 +18,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       dev.vm.box = "ubuntu/trusty64"
       dev.vm.hostname = "hubot-dev"
 
+      provisioning(dev, ["dev", "vagrant"])
   end
 
   config.vm.define "prod" do |prod|
       prod.vm.box = "awsdummy"
+
+      provisioning(prod, ["prod", "ubuntu"])
 
       prod.vm.provider "aws" do |aws, override|
           aws.region_config "us-west-2", :ami => "ami-835826b3"

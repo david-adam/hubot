@@ -15,8 +15,11 @@ dpkg -s libicu-dev &>/dev/null || {
   apt-get -y install libexpat1-dev libicu-dev
 }
 
+machine=$1
 cp /vagrant/upstart/myhubot.conf /etc/init/myhubot.conf
+cp /vagrant/upstart/myhubot.$machine.override /etc/init/myhubot.$machine.override
 
-sudo -u vagrant -i sh -c 'cd /vagrant/myhubot; npm install'
+run_as_user=$2
+sudo -u $run_as_user -i sh -c 'cd /vagrant/myhubot; npm install'
 
 service myhubot restart
