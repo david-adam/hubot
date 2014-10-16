@@ -5,10 +5,37 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.hostname = "hubot-dev"
 
   config.vm.provision "shell", path: "provision.sh"
 
-  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync_exclude: [".git/", "myhubot/node_modules"]
+  excludes = [".git/", "myhubot/node_modules"]
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: excludes, rsync_excludes: excludes
+
+  config.vm.define "dev" do |dev|
+      
+      dev.vm.box = "ubuntu/trusty64"
+      dev.vm.hostname = "hubot-dev"
+
+  end
+
+  config.vm.define "prod" do |prod|
+      prod.vm.box = "awsdummy"
+
+      prod.vm.provider "aws" do |aws, override|
+          aws.region_config "us-west-2", :ami => "ami-835826b3"
+          aws.region_config "us-west-1", :ami => "ami-ab7070ee"
+          aws.region = "us-west-2"
+
+          aws.tags = {
+            ’Name‘ => 'Hubot'
+          }
+
+          override.ssh.username = "ubuntu" #aws uses username of "ubuntu"
+          aws.keypair_name = "Hubot"
+          override.ssh.private_key_path = "~/.ssh/hubot.pem"
+
+          aws.access_key_id = "YOUR KEY"
+          aws.secret_access_key = "YOUR KEY"
+      end
+  end
 end
