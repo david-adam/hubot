@@ -22,9 +22,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "prod" do |prod|
-      prod.vm.box = "awsdummy"
+      #prod.vm.box = "awsdummy"
+      dev.vm.box = "ubuntu/trusty64"
 
-      provisioning(prod, ["prod", "ubuntu"])
+      #provisioning(prod, ["prod", "ubuntu"])
+       provisioning(prod, ["prod", "vagrant"])
 
       prod.vm.provider "aws" do |aws, override|
           aws.region_config "us-west-2", :ami => "ami-835826b3"
