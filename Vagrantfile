@@ -23,26 +23,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "prod" do |prod|
       #prod.vm.box = "awsdummy"
-      dev.vm.box = "ubuntu/trusty64"
+      prod.vm.box = "ubuntu/trusty64"
 
       #provisioning(prod, ["prod", "ubuntu"])
-       provisioning(prod, ["prod", "vagrant"])
+      provisioning(prod, ["prod", "vagrant"])
 
-      prod.vm.provider "aws" do |aws, override|
-          aws.region_config "us-west-2", :ami => "ami-835826b3"
-          aws.region_config "us-west-1", :ami => "ami-ab7070ee"
-          aws.region = "us-west-2"
+      #prod.vm.provider "aws" do |aws, override|
+          #aws.region_config "us-west-2", :ami => "ami-835826b3"
+          #aws.region_config "us-west-1", :ami => "ami-ab7070ee"
+          #aws.region = "us-west-2"
 
-          aws.tags = {
-            ’Name‘ => 'Hubot'
-          }
+          #aws.tags = {
+            #’Name‘ => 'Hubot'
+          #}
 
-          override.ssh.username = "ubuntu" #aws uses username of "ubuntu"
-          aws.keypair_name = "Hubot"
-          override.ssh.private_key_path = "~/.ssh/hubot.pem"
+          #override.ssh.username = "ubuntu" #aws uses username of "ubuntu"
+          #aws.keypair_name = "Hubot"
+          #override.ssh.private_key_path = "~/.ssh/hubot.pem"
 
-          aws.access_key_id = "YOUR KEY"
-          aws.secret_access_key = "YOUR KEY"
-      end
+          #aws.access_key_id = "YOUR KEY"
+          #aws.secret_access_key = "YOUR KEY"
+      #end
   end
 end
